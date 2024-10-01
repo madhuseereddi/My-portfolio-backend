@@ -55,18 +55,20 @@ const initializeTables = async () => {
 // Add Feedback
 app.post('/feedback', async (request, response) => {
   try {
-    const { email, message } = request.body;
-    const postFeedbackQuery = `
-      INSERT INTO feedback (email, message)
-      VALUES (?, ?)
-    `;
-    await db.run(postFeedbackQuery, [email, message]);
-    response.send('Feedback Submitted');
+      const { email, message } = request.body;
+      const postFeedbackQuery = `
+          INSERT INTO feedback (email, message)
+          VALUES (?, ?)
+      `;
+      await db.run(postFeedbackQuery, [email, message]);
+      // Send a JSON response instead of a plain string
+      response.json({ message: 'Feedback Submitted', email, feedbackMessage: message });
   } catch (error) {
-    console.error(error);
-    response.status(500).send('Error submitting feedback');
+      console.error(error);
+      response.status(500).json({ error: 'Error submitting feedback' }); // Send JSON error response
   }
 });
+
 
 // Get All Feedback
 app.get('/feedback', async (request, response) => {

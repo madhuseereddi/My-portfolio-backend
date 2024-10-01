@@ -4,8 +4,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js", // Add a start script
-    "dev": "nodemon index.js"  // Add a dev script for development
+    "start": "node index.js", 
+    "dev": "nodemon index.js" ,
+     "predeploy": "npm run build",
+  "deploy": "gh-pages -d build"
   },
   "keywords": [],
   "author": "",

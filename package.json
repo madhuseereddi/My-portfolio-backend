@@ -4,14 +4,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-      "predeploy": "npm run build",
-  "deploy": "gh-pages -d build"
+    "predeploy": "npm run build",  // This assumes you have a build process
+    "deploy": "gh-pages -d build"  // Specify the build directory you want to deploy
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
-  "homepage": "https://madhuseereddi.github.io/my-portfolio-backend", 
+  "homepage": "https://madhuseereddi.github.io/my-portfolio-backend",
   "dependencies": {
     "body-parser": "^1.20.3",
     "express": "^4.21.0",

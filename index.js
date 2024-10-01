@@ -2,8 +2,10 @@ const express = require('express');
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
 
 // Open the database connection
@@ -52,60 +54,90 @@ const initializeTables = async () => {
 
 // Add Feedback
 app.post('/feedback', async (request, response) => {
-  const { email, message } = request.body;
-  const postFeedbackQuery = `
-    INSERT INTO feedback (email, message)
-    VALUES ('${email}', '${message}')
-  `;
-  await db.run(postFeedbackQuery);
-  response.send('Feedback Submitted');
+  try {
+    const { email, message } = request.body;
+    const postFeedbackQuery = `
+      INSERT INTO feedback (email, message)
+      VALUES (?, ?)
+    `;
+    await db.run(postFeedbackQuery, [email, message]);
+    response.send('Feedback Submitted');
+  } catch (error) {
+    console.error(error);
+    response.status(500).send('Error submitting feedback');
+  }
 });
 
 // Get All Feedback
 app.get('/feedback', async (request, response) => {
-  const getFeedbackQuery = `SELECT * FROM feedback`;
-  const feedbackList = await db.all(getFeedbackQuery);
-  response.send(feedbackList);
+  try {
+    const getFeedbackQuery = `SELECT * FROM feedback`;
+    const feedbackList = await db.all(getFeedbackQuery);
+    response.send(feedbackList);
+  } catch (error) {
+    console.error(error);
+    response.status(500).send('Error retrieving feedback');
+  }
 });
 
 // Projects Routes
 
 // Add Project
 app.post('/projects', async (request, response) => {
-  const { name, link, imglink, languages_used, description } = request.body;
-  const postProjectQuery = `
-    INSERT INTO projects (name, link, imglink, languages_used, description)
-    VALUES ('${name}', '${link}', '${imglink}', '${languages_used}', '${description}')
-  `;
-  await db.run(postProjectQuery);
-  response.send('Project Added');
+  try {
+    const { name, link, imglink, languages_used, description } = request.body;
+    const postProjectQuery = `
+      INSERT INTO projects (name, link, imglink, languages_used, description)
+      VALUES (?, ?, ?, ?, ?)
+    `;
+    await db.run(postProjectQuery, [name, link, imglink, languages_used, description]);
+    response.send('Project Added');
+  } catch (error) {
+    console.error(error);
+    response.status(500).send('Error adding project');
+  }
 });
 
 // Get All Projects
 app.get('/projects', async (request, response) => {
-  const getProjectsQuery = `SELECT * FROM projects`;
-  const projectsList = await db.all(getProjectsQuery);
-  response.send(projectsList);
+  try {
+    const getProjectsQuery = `SELECT * FROM projects`;
+    const projectsList = await db.all(getProjectsQuery);
+    response.send(projectsList);
+  } catch (error) {
+    console.error(error);
+    response.status(500).send('Error retrieving projects');
+  }
 });
 
 // Skills Routes
 
 // Add Skill
 app.post('/skills', async (request, response) => {
-  const { name, description, usage, logolink } = request.body;
-  const postSkillQuery = `
-    INSERT INTO skills (name, description, usage, logolink)
-    VALUES ('${name}', '${description}', '${usage}', '${logolink}')
-  `;
-  await db.run(postSkillQuery);
-  response.send('Skill Added');
+  try {
+    const { name, description, usage, logolink } = request.body;
+    const postSkillQuery = `
+      INSERT INTO skills (name, description, usage, logolink)
+      VALUES (?, ?, ?, ?)
+    `;
+    await db.run(postSkillQuery, [name, description, usage, logolink]);
+    response.send('Skill Added');
+  } catch (error) {
+    console.error(error);
+    response.status(500).send('Error adding skill');
+  }
 });
 
 // Get All Skills
 app.get('/skills', async (request, response) => {
-  const getSkillsQuery = `SELECT * FROM skills`;
-  const skillsList = await db.all(getSkillsQuery);
-  response.send(skillsList);
+  try {
+    const getSkillsQuery = `SELECT * FROM skills`;
+    const skillsList = await db.all(getSkillsQuery);
+    response.send(skillsList);
+  } catch (error) {
+    console.error(error);
+    response.status(500).send('Error retrieving skills');
+  }
 });
 
 // Start the server and initialize the database
